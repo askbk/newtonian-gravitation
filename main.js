@@ -1,9 +1,9 @@
 import { Body } from "./body.js"
 import { World } from "./world.js"
 
-const drawBackground = (context) => {
+const drawBackground = (context, width, height) => {
   context.fillStyle = "black"
-  context.fillRect(0, 0, 900, 400)
+  context.fillRect(0, 0, width, height)
 }
 
 const drawBody = (context, body) => {
@@ -13,13 +13,15 @@ const drawBody = (context, body) => {
   context.fill()
 }
 
-const draw = (context, bodies) => {
-  drawBackground(context)
+const drawFunc = (width, height) => (context, bodies) => {
+  drawBackground(context, width, height)
   bodies.forEach((body) => drawBody(context, body))
 }
 
 const play = (canvas, world) => {
   const context = canvas.getContext("2d")
+  const { width, height } = canvas
+  const draw = drawFunc(width, height)
   let _world = world
   let lastTime
   const callback = (millis) => {
