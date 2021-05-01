@@ -1,4 +1,9 @@
-import { arrayDifference, euclideanDistance, G } from "./math.js"
+import {
+  RESTITUTION_COEFFICIENT,
+  arrayDifference,
+  euclideanDistance,
+  G,
+} from "./math.js"
 
 export class Body {
   constructor(radius, mass, position, speed) {
@@ -28,6 +33,10 @@ export class Body {
     return euclideanDistance(this.position, otherBody.position)
   }
 
+  isCollision(otherBody) {
+    return this.getDistance(otherBody) <= this.radius + otherBody.radius
+  }
+
   calculateGravitationalForceVector(otherBody) {
     const distance = this.getDistance(otherBody)
 
@@ -45,10 +54,39 @@ export class Body {
       .reduce((acc, curr) => acc.map((e, index) => e + curr[index]))
   }
 
+  calculateOneDimensionalSpeedAfterImpact(u1, u2, m) {
+    return (
+      (u1 * this.mass + u2 * m + m * RESTITUTION_COEFFICIENT * (u2 - u1)) /
+      (m + this.mass)
+    )
+  }
+
+  calculateCollisionSpeedVector(otherBody) {
+    return [
+      this.calculateOneDimensionalSpeedAfterImpact(
+        this.speed[0],
+        otherBody.speed[0],
+        otherBody.mass,
+      ),
+      this.calculateOneDimensionalSpeedAfterImpact(
+        this.speed[1],
+        otherBody.speed[1],
+        otherBody.mass,
+      ),
+    ]
+  }
+
+  calculateNetCollisionVector(otherBodies) {
+    return otherBodies
+      .filter(this.isCollision.bind(this))
+      .map(this.calculateCollisionSpeedVector.bind(this))
+      .reduce((acc, curr) => acc.map((e, index) => e + curr[index]), this.speed)
+  }
+
   updatePosition(otherBodies, dt) {
     const netForceVector = this.calculateNetForceVector(otherBodies)
     const accelerationVector = netForceVector.map((force) => force / this.mass)
-    const newSpeed = this.speed.map(
+    const newSpeed = this.calculateNetCollisionVector(otherBodies).map(
       (v, index) => v + accelerationVector[index] * dt,
     )
     const newPosition = this.position.map(
