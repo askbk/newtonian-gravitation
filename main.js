@@ -18,11 +18,18 @@ const drawFunc = (width, height) => (context, bodies) => {
   bodies.forEach((body) => drawBody(context, body))
 }
 
-const play = (canvas, world) => {
+const play = (document, world) => {
+  const canvas = document.getElementById("world-canvas")
   const context = canvas.getContext("2d")
   const { width, height } = canvas
   const draw = drawFunc(width, height)
   let _world = world
+
+  document.addEventListener("click", (event) => {
+    const { offsetY, offsetX } = event
+    _world = _world.addBody(new Body(10, 1e17, [offsetX, offsetY], [0, 0]))
+  })
+
   let lastTime
   const callback = (millis) => {
     if (lastTime) {
@@ -37,7 +44,7 @@ const play = (canvas, world) => {
 }
 
 play(
-  document.getElementById("world-canvas"),
+  document,
   new World([
     new Body(10, 1e17, [150, 150], [-160, 160]),
     new Body(50, 1e18, [450, 450], [0, 0]),
