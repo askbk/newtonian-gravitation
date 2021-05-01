@@ -39,7 +39,7 @@ const play = (canvas, world) => {
 play(
   document.getElementById("world-canvas"),
   new World([
-    new Body(50, 1e15, [100, 100], [0, 0]),
-    new Body(100, 1e15, [600, 200], [0, 0]),
+    new Body(10, 1e17, [150, 150], [-160, 160]),
+    new Body(50, 1e18, [450, 450], [0, 0]),
   ]),
 )
