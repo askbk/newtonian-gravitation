@@ -1,9 +1,14 @@
 export class World {
-  constructor(objects) {
-    this._objects = objects
+  constructor(bodies) {
+    this._bodies = bodies
   }
 
-  get objects() {
-    return this._objects
+  get bodies() {
+    return this._bodies
+  }
+
+  update(dt) {
+    const bodies = this.bodies.map((body) => body.updatePosition(dt))
+    return new World(bodies)
   }
 }
