@@ -37,7 +37,7 @@ const play = (canvas, world) => {
 play(
   document.getElementById("world-canvas"),
   new World([
-    new Body(50, 50, [100, 100], 0),
-    new Body(100, 50, [600, 200], 0),
+    new Body(50, 1e15, [100, 100], [0, 0]),
+    new Body(100, 1e15, [600, 200], [0, 0]),
   ]),
 )

@@ -8,7 +8,12 @@ export class World {
   }
 
   update(dt) {
-    const bodies = this.bodies.map((body) => body.updatePosition(dt))
+    const bodies = this.bodies.map((body) =>
+      body.updatePosition(
+        this.bodies.filter((b) => b != body),
+        dt,
+      ),
+    )
     return new World(bodies)
   }
 }
