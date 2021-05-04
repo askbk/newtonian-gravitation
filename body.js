@@ -1,6 +1,7 @@
 import {
   RESTITUTION_COEFFICIENT,
   arrayDifference,
+  arrayAddition,
   euclideanDistance,
   G,
 } from "./math.js"
@@ -51,7 +52,7 @@ export class Body {
   calculateNetForceVector(otherBodies) {
     return otherBodies
       .map((otherBody) => this.calculateGravitationalForceVector(otherBody))
-      .reduce((acc, curr) => acc.map((e, index) => e + curr[index]))
+      .reduce(arrayAddition)
   }
 
   calculateOneDimensionalSpeedAfterImpact(u1, u2, m) {
@@ -80,7 +81,7 @@ export class Body {
     return otherBodies
       .filter(this.isCollision.bind(this))
       .map(this.calculateCollisionSpeedVector.bind(this))
-      .reduce((acc, curr) => acc.map((e, index) => e + curr[index]), this.speed)
+      .reduce(arrayAddition, this.speed)
   }
 
   updatePosition(otherBodies, dt) {
